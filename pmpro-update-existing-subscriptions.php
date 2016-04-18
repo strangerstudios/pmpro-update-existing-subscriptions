@@ -449,22 +449,36 @@ function pmproues_wp_ajax()
                 $update_order->BillingFrequency = $cycle_number;
                 //need filter to reset ProfileStartDate
                 add_filter('pmpro_profile_start_date', create_function('$startdate, $order', 'return "' . $update_order->ProfileStartDate . 'T0:0:0";'), 10, 2);
-                //update subscription
-                $update_order->Gateway->subscribe($update_order, false);
-                //update membership
-                $sqlQuery = "UPDATE $wpdb->pmpro_memberships_users
-								SET billing_amount = '" . esc_sql($billing_amount) . "',
-									cycle_number = '" . esc_sql($cycle_number) . "',
-									cycle_period = '" . esc_sql($cycle_period) . "',
-									trial_amount = '',
-									trial_limit = ''
-								WHERE user_id = '" . esc_sql($user->ID) . "'
-									AND membership_id = '" . esc_sql($order->membership_id) . "'
-									AND status = 'active'
-								LIMIT 1";
+
+                if (! empty($billing_amount) ) {
+                    //update subscription
+                    $update_order->Gateway->subscribe( $update_order, false );
+                    //update membership
+                    $sqlQuery = "UPDATE $wpdb->pmpro_memberships_users
+                                    SET billing_amount = '" . esc_sql( $billing_amount ) . "',
+                                        cycle_number = '" . esc_sql( $cycle_number ) . "',
+                                        cycle_period = '" . esc_sql( $cycle_period ) . "',
+                                        trial_amount = '',
+                                        trial_limit = ''
+                                    WHERE user_id = '" . esc_sql( $user->ID ) . "'
+                                        AND membership_id = '" . esc_sql( $order->membership_id ) . "'
+                                        AND status = 'active'
+                                    LIMIT 1";
+
+                    $update_order->status = "success";
+                } else {
+                    $wpdb->prepare("
+                        INSERT {$wpdb->pmpro_memberships_users}
+                            ( cycle_number, cycle_period, trial_amount, trial_limit, status, membership_id, user_id )
+                            VALUES
+                            ( %d, %s, %d, %d, %s, %d, %d )",
+                        $cycle_number, $cycle_period, '', '', $user->ID, 0, 'status'
+                    );
+                    $update_order->status = "success";
+                }
                 $wpdb->query($sqlQuery);
                 //save order so we know which plan to look for at stripe (order code = plan id)
-                $update_order->status = "success";
+
                 $update_order->saveOrder();
 
                 echo "ORDER UPDATED!";
