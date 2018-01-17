@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - Update Existing Subscriptions
 Plugin URI: http://www.paidmembershipspro.com/wp/update-existing-subscriptsions/
 Description: Interface to update the details of existing subscriptions.
-Version: .1
+Version: .2
 Author: Stranger Studios
 Author URI: http://www.strangerstudios.com
 */
@@ -24,15 +24,10 @@ Author URI: http://www.strangerstudios.com
     Environment [ Sandbox / Test ]
 */
 
-if ( ! defined("PMPRO_DIR") ) {
-    // return quietly (PMPro is deactivated or not installed)
-    return;
-}
 /*
 	Dashboard Menu
 */
-function pmproues_add_pages()
-{
+function pmproues_add_pages() {
     add_submenu_page('pmpro-membershiplevels', __('Update Subscriptions', 'pmpro'), __('Update Subscriptions', 'pmpro'), 'manage_options', 'pmpro-update-existing-subscriptions', 'pmpro_update_existing_subscriptions');
 }
 
@@ -41,8 +36,7 @@ add_action('admin_menu', 'pmproues_add_pages', 15);
 /*
 	Enqueue updates.js if needed
 */
-function pmproues_enqueue_js()
-{
+function pmproues_enqueue_js() {
     if (is_admin() && current_user_can('manage_options') && !empty($_REQUEST['page']) && $_REQUEST['page'] == 'pmpro-update-existing-subscriptions') {
         //check fields
         if (!empty($_REQUEST['pmproues_gateway']) &&
@@ -71,17 +65,20 @@ function pmproues_enqueue_js()
         }
     }
 }
-
 add_action('admin_enqueue_scripts', 'pmproues_enqueue_js');
 
 /*
 	Page
 */
-function pmpro_update_existing_subscriptions()
-{
+function pmpro_update_existing_subscriptions() {
+    // die if PMPro is deactivated or not installed
+    if ( ! defined("PMPRO_DIR") ) {	    
+	    die(__('Paid Memberships Pro must be activated before using this tool.', 'pmproues'));
+	}
+
     //only admins can get this
     if (!function_exists("current_user_can") || !current_user_can("manage_options")) {
-        die(__("You do not have permissions to perform this action.", "pmpro"));
+        die(__("You do not have permissions to perform this action.", "pmproues"));
     }
 
     //vars
@@ -273,8 +270,12 @@ function pmpro_update_existing_subscriptions()
 /*
 	Load an update via AJAX
 */
-function pmproues_wp_ajax()
-{
+function pmproues_wp_ajax() {
+	// return quietly (PMPro is deactivated or not installed)
+    if ( ! defined("PMPRO_DIR") ) {	    
+	    exit;
+	}
+
     //make sure the user is an admin
     if (!current_user_can('manage_options')) {
         exit;
@@ -490,5 +491,4 @@ function pmproues_wp_ajax()
 
     exit;
 }
-
 add_action('wp_ajax_pmpro_update_existing_subscriptions', 'pmproues_wp_ajax');
