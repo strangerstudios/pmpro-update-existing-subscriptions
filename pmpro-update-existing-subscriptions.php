@@ -1,20 +1,20 @@
 <?php
 /*
 Plugin Name: Paid Memberships Pro - Update Existing Subscriptions
-Plugin URI: http://www.paidmembershipspro.com/wp/update-existing-subscriptsions/
+Plugin URI: https://github.com/strangerstudios/pmpro-update-existing-subscriptions
 Description: Interface to update the details of existing subscriptions.
 Version: .2
 Author: Stranger Studios
-Author URI: http://www.strangerstudios.com
+Author URI: https://www.strangerstudios.com
 */
 
 /*
 	Update Subscriptions page.
-	
+
 	Update subscription [ for level 1 ].
-	
+
 	Set billing amount to ____ (use 0 to cancel the subscription)
-	
+
 	Set billing period to ____ [ days/months/weeks/years ]
 
     Process records created prior to ______ (YYYY-MM-DD date)
@@ -72,7 +72,7 @@ add_action('admin_enqueue_scripts', 'pmproues_enqueue_js');
 */
 function pmpro_update_existing_subscriptions() {
     // die if PMPro is deactivated or not installed
-    if ( ! defined("PMPRO_DIR") ) {	    
+    if ( ! defined("PMPRO_DIR") ) {
 	    die(__('Paid Memberships Pro must be activated before using this tool.', 'pmproues'));
 	}
 
@@ -272,7 +272,7 @@ function pmpro_update_existing_subscriptions() {
 */
 function pmproues_wp_ajax() {
 	// return quietly (PMPro is deactivated or not installed)
-    if ( ! defined("PMPRO_DIR") ) {	    
+    if ( ! defined("PMPRO_DIR") ) {
 	    exit;
 	}
 
