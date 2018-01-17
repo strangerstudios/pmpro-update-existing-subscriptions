@@ -13,6 +13,8 @@ jQuery(document).ready(function() {
 		'cycle_number': pmproues.cycle_number,
 		'cycle_period': pmproues.cycle_period,
 		'live': pmproues.live,
+		'after_date': pmproues.after_date,
+		'before_date': pmproues.before_date,
 	};
 
 	//start updates and update status
@@ -30,12 +32,12 @@ jQuery(document).ready(function() {
 					alert('Error with update. Try refreshing.');				
 				},
 				success: function(responseHTML){
-					if (responseHTML == 'error')
+					if (responseHTML === 'error')
 					{
 						alert('Error with update. Try refreshing.');
 						document.title = $title;
 					}
-					else if(responseHTML == 'done')
+					else if(responseHTML === 'done')
 					{
 						$status.html($status.html() + '\n----\n\nDone!');
 						document.title = '! ' + $title;
