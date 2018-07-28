@@ -10,11 +10,11 @@ Author URI: http://www.strangerstudios.com
 
 /*
 	Update Subscriptions page.
-	
+
 	Update subscription [ for level 1 ].
-	
+
 	Set billing amount to ____ (use 0 to cancel the subscription)
-	
+
 	Set billing period to ____ [ days/months/weeks/years ]
 
     Process records created prior to ______ (YYYY-MM-DD date)
@@ -54,7 +54,7 @@ function pmproues_enqueue_js() {
                     'billing_amount' => isset($_REQUEST['pmproues_billing_amount']) ? floatval($_REQUEST['pmproues_billing_amount']) : null,
                     'cycle_number' => isset($_REQUEST['pmproues_cycle_number']) ? intval($_REQUEST['pmproues_cycle_number']) : 0,
                     'cycle_period' => isset($_REQUEST['pmproues_cycle_period']) ? sanitize_text_field($_REQUEST['pmproues_cycle_period']) : null,
-                    'live' => isset($_REQUEST['pmproues_live']) ? sanitize_text_field($_REQUEST['pmproues_cycle_period']) : 0,
+                    'live' => isset($_REQUEST['pmproues_live']) ? sanitize_text_field($_REQUEST['pmproues_live']) : 0,
                     'before_date' => isset($_REQUEST['pmproues_before_date']) ? sanitize_text_field($_REQUEST['pmproues_before_date']) : null,
                     'after_date' => isset($_REQUEST['pmproues_after_date']) ? sanitize_text_field($_REQUEST['pmproues_after_date']) : null,
         )
@@ -72,7 +72,7 @@ add_action('admin_enqueue_scripts', 'pmproues_enqueue_js');
 */
 function pmpro_update_existing_subscriptions() {
     // die if PMPro is deactivated or not installed
-    if ( ! defined("PMPRO_DIR") ) {	    
+    if ( ! defined("PMPRO_DIR") ) {
 	    die(__('Paid Memberships Pro must be activated before using this tool.', 'pmproues'));
 	}
 
@@ -272,7 +272,7 @@ function pmpro_update_existing_subscriptions() {
 */
 function pmproues_wp_ajax() {
 	// return quietly (PMPro is deactivated or not installed)
-    if ( ! defined("PMPRO_DIR") ) {	    
+    if ( ! defined("PMPRO_DIR") ) {
 	    exit;
 	}
 
